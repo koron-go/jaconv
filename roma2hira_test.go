@@ -13,10 +13,7 @@ func TestConvert(t *testing.T) {
 		{"kstnhmyrw", "kstんhmyrw"},
 		{"\xff", "\xff"},
 	} {
-		got, err := Convert(c.src)
-		if err != nil {
-			t.Errorf("failed to convert: #%d case=%+v", i, c)
-		}
+		got := Convert(c.src)
 		if got != c.want {
 			t.Errorf("unexpected result: #%d case=%+v got=%s", i, c, got)
 		}

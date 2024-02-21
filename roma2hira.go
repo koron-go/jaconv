@@ -19,6 +19,6 @@ func init() {
 	defaultDict = d
 }
 
-func Convert(s string) (string, error) {
+func Convert(s string) string {
 	return defaultDict.Convert(s)
 }

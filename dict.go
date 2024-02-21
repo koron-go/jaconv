@@ -13,12 +13,12 @@ import (
 
 type Dict struct {
 	tree    *trietree.STree
-	entries []DictEntry
+	entries []dictEntry
 }
 
-type DictEntry struct {
-	Emit   string
-	Remain string
+type dictEntry struct {
+	emit   string
+	remain string
 }
 
 func Load(r io.Reader) (*Dict, error) {
@@ -30,7 +30,7 @@ func Load(r io.Reader) (*Dict, error) {
 	rr.ReuseRecord = true
 
 	var tree trietree.DTree
-	entries := make([]DictEntry, 1) // an empty/dummy entries at 0
+	entries := make([]dictEntry, 1) // an empty/dummy entries at 0
 
 	for {
 		records, err := rr.Read()
@@ -44,9 +44,9 @@ func Load(r io.Reader) (*Dict, error) {
 			return nil, fmt.Errorf("requires at least 2 records per line")
 		}
 		key := records[0]
-		entry := DictEntry{Emit: records[1]}
+		entry := dictEntry{emit: records[1]}
 		if len(records) >= 3 {
-			entry.Remain = records[2]
+			entry.remain = records[2]
 		}
 		id := tree.Put(key)
 		if id != len(entries) {
@@ -60,7 +60,7 @@ func Load(r io.Reader) (*Dict, error) {
 	}, nil
 }
 
-func (d *Dict) Convert(s string) (string, error) {
+func (d *Dict) Convert(s string) string {
 	var buf bytes.Buffer
 	for s != "" {
 		prefix, id := d.tree.LongestPrefix(s)
@@ -77,11 +77,11 @@ func (d *Dict) Convert(s string) (string, error) {
 			continue
 		}
 		entry := d.entries[id]
-		buf.WriteString(entry.Emit)
+		buf.WriteString(entry.emit)
 		s = s[len(prefix):]
-		if entry.Remain != "" {
-			s = entry.Remain + s
+		if entry.remain != "" {
+			s = entry.remain + s
 		}
 	}
-	return buf.String(), nil
+	return buf.String()
 }
