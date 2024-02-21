@@ -11,6 +11,7 @@ import (
 	"github.com/koron-go/trietree"
 )
 
+// Table is conversion table for Japanese.
 type Table struct {
 	tree    *trietree.STree
 	entries []edgeEntry
@@ -21,6 +22,7 @@ type edgeEntry struct {
 	remain string
 }
 
+// Load loads conversion table data in TSV format.
 func Load(r io.Reader) (*Table, error) {
 	rr := csv.NewReader(r)
 	rr.Comma = '\t'
@@ -60,6 +62,7 @@ func Load(r io.Reader) (*Table, error) {
 	}, nil
 }
 
+// Convert converts s with this table.
 func (d *Table) Convert(s string) string {
 	var buf bytes.Buffer
 	for s != "" {
