@@ -1,4 +1,4 @@
-module github.com/koron-go/roma2hira
+module github.com/koron-go/jaconv
 
 go 1.21
 

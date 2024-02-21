@@ -1,4 +1,4 @@
-package roma2hira
+package jaconv
 
 import (
 	"bytes"
@@ -11,17 +11,17 @@ import (
 	"github.com/koron-go/trietree"
 )
 
-type Dict struct {
+type Table struct {
 	tree    *trietree.STree
-	entries []dictEntry
+	entries []edgeEntry
 }
 
-type dictEntry struct {
+type edgeEntry struct {
 	emit   string
 	remain string
 }
 
-func Load(r io.Reader) (*Dict, error) {
+func Load(r io.Reader) (*Table, error) {
 	rr := csv.NewReader(r)
 	rr.Comma = '\t'
 	rr.Comment = '#'
@@ -30,7 +30,7 @@ func Load(r io.Reader) (*Dict, error) {
 	rr.ReuseRecord = true
 
 	var tree trietree.DTree
-	entries := make([]dictEntry, 1) // an empty/dummy entries at 0
+	entries := make([]edgeEntry, 1) // an empty/dummy entries at 0
 
 	for {
 		records, err := rr.Read()
@@ -44,7 +44,7 @@ func Load(r io.Reader) (*Dict, error) {
 			return nil, fmt.Errorf("requires at least 2 records per line")
 		}
 		key := records[0]
-		entry := dictEntry{emit: records[1]}
+		entry := edgeEntry{emit: records[1]}
 		if len(records) >= 3 {
 			entry.remain = records[2]
 		}
@@ -54,13 +54,13 @@ func Load(r io.Reader) (*Dict, error) {
 		}
 		entries = append(entries, entry)
 	}
-	return &Dict{
+	return &Table{
 		tree:    trietree.Freeze(&tree),
 		entries: entries,
 	}, nil
 }
 
-func (d *Dict) Convert(s string) string {
+func (d *Table) Convert(s string) string {
 	var buf bytes.Buffer
 	for s != "" {
 		prefix, id := d.tree.LongestPrefix(s)

@@ -1,4 +1,4 @@
 /*
-Package roma2hira provides conversion Roma-Ji to Hiragana for Japanese.
+Package jaconv provides conversion table for Japanese.
 */
-package roma2hira
+package jaconv
