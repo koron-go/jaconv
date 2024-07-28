@@ -15,7 +15,7 @@ import (
 var data []byte
 
 // Table is convert table for Roma-ji to Hiragana
-var Table *jaconv.Table
+var Table jaconv.Table
 
 func init() {
 	tbl, err := jaconv.Load(bytes.NewReader(data))

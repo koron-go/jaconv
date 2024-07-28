@@ -15,7 +15,7 @@ import (
 var data []byte
 
 // Table is convert table from Narrow (Hankaku) to Wide (Zenkaku) for Japanese.
-var Table *jaconv.Table
+var Table jaconv.Table
 
 func init() {
 	tbl, err := jaconv.Load(bytes.NewReader(data))

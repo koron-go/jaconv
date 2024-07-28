@@ -11,13 +11,12 @@ import (
 	"io"
 	"unicode/utf8"
 
-	"github.com/koron-go/trietree"
+	"github.com/koron-go/trietree/trie2"
 )
 
 // Table is conversion table for Japanese.
 type Table struct {
-	tree    *trietree.STree
-	entries []edgeEntry
+	tree *trie2.STrie[edgeEntry]
 }
 
 type edgeEntry struct {
@@ -26,7 +25,7 @@ type edgeEntry struct {
 }
 
 // Load loads conversion table data in TSV format.
-func Load(r io.Reader) (*Table, error) {
+func Load(r io.Reader) (Table, error) {
 	rr := csv.NewReader(r)
 	rr.Comma = '\t'
 	rr.Comment = '#'
@@ -34,8 +33,7 @@ func Load(r io.Reader) (*Table, error) {
 	rr.TrimLeadingSpace = true
 	rr.ReuseRecord = true
 
-	var tree trietree.DTree
-	entries := make([]edgeEntry, 1) // an empty/dummy entries at 0
+	var tree trie2.DTrie[edgeEntry]
 
 	for {
 		records, err := rr.Read()
@@ -43,37 +41,30 @@ func Load(r io.Reader) (*Table, error) {
 			if errors.Is(err, io.EOF) {
 				break
 			}
-			return nil, err
+			return Table{}, err
 		}
 		if len(records) < 2 {
-			return nil, fmt.Errorf("requires at least 2 records per line")
+			return Table{}, fmt.Errorf("requires at least 2 records per line")
 		}
 		key := records[0]
 		entry := edgeEntry{emit: records[1]}
 		if len(records) >= 3 {
 			entry.remain = records[2]
 		}
-		id := tree.Put(key)
-		if id != len(entries) {
-			return nil, fmt.Errorf("duplicated entries for key %q", key)
-		}
-		entries = append(entries, entry)
+		tree.Put(key, entry)
 	}
-	return &Table{
-		tree:    trietree.Freeze(&tree),
-		entries: entries,
-	}, nil
+	return Table{tree: tree.Freeze(false)}, nil
 }
 
 // Convert converts s with this table.
-func (d *Table) Convert(s string) string {
+func (tbl Table) Convert(s string) string {
 	var buf bytes.Buffer
 	for s != "" {
-		prefix, id := d.tree.LongestPrefix(s)
-		if id == 0 {
+		entry, prefix, ok := tbl.tree.LongestPrefix(s)
+		if !ok {
 			r, n := utf8.DecodeRuneInString(s)
 			if r == utf8.RuneError {
-				// NOTE: n=0 is never happen
+				// n=0 will never be happen
 				buf.WriteString(s[:n])
 				s = s[n:]
 				continue
@@ -82,7 +73,6 @@ func (d *Table) Convert(s string) string {
 			s = s[n:]
 			continue
 		}
-		entry := d.entries[id]
 		buf.WriteString(entry.emit)
 		s = s[len(prefix):]
 		if entry.remain != "" {
