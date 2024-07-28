@@ -1,2 +1,4 @@
-github.com/koron-go/trietree v1.0.0 h1:KI5aj/a56+CjUCE1noi9LAS/WhdUo1nlsZ0wY93djYE=
-github.com/koron-go/trietree v1.0.0/go.mod h1:0FPOmULU2oGSwaNSD4qD/0kZ04lTFNO6j1WYuAtIIKk=
+github.com/google/go-cmp v0.6.0 h1:ofyhxvXcZhMsU5ulbFiLKl/XBFqE1GSq7atu8tAmTRI=
+github.com/google/go-cmp v0.6.0/go.mod h1:17dUlkBOakJ0+DkrSSNjCkIjxS6bF9zb3elmeNGIjoY=
+github.com/koron-go/trietree v1.1.0 h1:Wurz7IOOpdVRSIc5C4MvJNjBcZU26vmscw8CXnoDgm4=
+github.com/koron-go/trietree v1.1.0/go.mod h1:0FPOmULU2oGSwaNSD4qD/0kZ04lTFNO6j1WYuAtIIKk=
