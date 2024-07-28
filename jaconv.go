@@ -30,7 +30,6 @@ func Load(r io.Reader) (Table, error) {
 	rr.Comma = '\t'
 	rr.Comment = '#'
 	rr.FieldsPerRecord = -1
-	rr.TrimLeadingSpace = true
 	rr.ReuseRecord = true
 
 	var tree trie2.DTrie[edgeEntry]

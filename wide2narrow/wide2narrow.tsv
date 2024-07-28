@@ -2,8 +2,9 @@
 #
 # Format: {INPUT}\t{EMIT}[\t{REMAIN}]
 
+　	" "
 ！	!
-”	"
+”	""""
 ＃	#
 ＄	$
 ％	%
