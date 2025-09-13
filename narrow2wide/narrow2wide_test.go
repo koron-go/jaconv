@@ -14,7 +14,6 @@ func TestConvert(t *testing.T) {
 		{"\"", "”"},
 		{"ABC123xyz", "ＡＢＣ１２３ｘｙｚ"},
 		{" ", "　"},
-
 	} {
 		got := Convert(c.src)
 		if got != c.want {
