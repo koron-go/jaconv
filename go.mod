@@ -1,5 +1,5 @@
 module github.com/koron-go/jaconv
 
-go 1.21
+go 1.23
 
-require github.com/koron-go/trietree v1.1.0
+require github.com/koron-go/trietree v1.2.0
